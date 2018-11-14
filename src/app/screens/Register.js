@@ -1,16 +1,74 @@
 import React, { Component } from 'react';
 import { SafeAreaView } from 'react-navigation'
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { Button, Alert } from 'react-native';
 import styles from '../Style'
+import t from 'tcomb-form-native';
 
-type Props = {};
-class Register extends Component<Props> {
+const Form = t.form.Form;
+
+const Email = t.refinement(t.String, email => {
+    const reg = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/; //or any other regexp
+    return reg.test(email);
+});
+
+const Purchase = t.struct({
+    quantity: t.Number,
+    email: Email,
+    verifyEmail: Email,
+});
+
+var value = {
+    quantity: 1
+};
+
+// var options = {
+//     fields: {
+//         email: {
+//             error: 'Insert a valid email'
+//         }
+//     }
+// }
+
+class Register extends Component {
+    clearForm() {
+        this.setState({ value: null });
+    }
+
+    handleSubmit = () => {
+        const value = this._form.getValue(); // use that ref to get the form value
+        // console.log('value: ', value);
+
+        if (value) {
+            Alert.alert(
+                'Confirm Purchase',
+                'Are you sure you wish to purchase ' + value.quantity + ' tickets?',
+                [
+                    {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+                    {text: 'Confirm', onPress: () => {
+                        this.clearForm();
+                        //send qty and email
+                        //if successful, clear form
+                    }},
+                ],
+                { cancelable: false }
+            )
+        }
+    }
+
     render() {
         return (
             <SafeAreaView style={styles.container}>
-                <View style={[styles.container, styles.innerContainer]}>
-                    <Text style={styles.welcome}>Welcome to my app!</Text>
-                </View>
+ 
+                <Form 
+                    ref={c => this._form = c}
+                    type={Purchase} 
+                    value={value}
+                />
+
+                <Button
+                    title="Purchase Ticket"
+                    onPress={this.handleSubmit}
+                />
             </SafeAreaView>
         );
     }

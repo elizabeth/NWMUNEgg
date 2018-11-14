@@ -35,6 +35,10 @@ var value = {
 //     }
 // }
 
+var config = {
+    headers: {'Authorization': "bearer " + token}
+};
+
 class Register extends Component {
     clearForm() {
         this.setState({ value: null });
@@ -51,7 +55,8 @@ class Register extends Component {
                 [
                     {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
                     {text: 'Confirm', onPress: () => {
-                        axios.post('http://localhost:3333/api/v1/ticket/generate', {
+                        axios.post('http://localhost:3333/api/v1/ticket/generate', 
+                        {
                             quantity: value.quantity,
                             email: value.email.toString()
                         })
@@ -59,12 +64,12 @@ class Register extends Component {
                             console.log(response);
                             if (response.status == 200) {
                                 //response.data.message
-                                Alert.alert(response.data.message);
+                                Alert.alert("Success", response.data.message);
                                 this.clearForm();
                             }
                         })
                         .catch(function(error) {
-                            Alert.alert(error);
+                            Alert.alert("Error", "Error scanning ticket, please try again");
                         });
                         //send qty and email
                         //if successful, clear form

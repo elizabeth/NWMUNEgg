@@ -40,10 +40,7 @@ export const CheckInStack = StackNavigator({
                 }
             })
         }
-    }
-})
-
-export const CheckInDetailStack = StackNavigator({
+    },
     CheckInDetail: {
         screen: CheckInDetail,
         navigationOptions: {

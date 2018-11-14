@@ -11,10 +11,15 @@ const Email = t.refinement(t.String, email => {
     return reg.test(email);
 });
 
+const VerifyEmailEquality = t.refinement(t.String, value => {
+    return true
+    // return value === this.state.value.email
+  })
+
 const Purchase = t.struct({
     quantity: t.Number,
     email: Email,
-    verifyEmail: Email,
+    verifyEmail: VerifyEmailEquality,
 });
 
 var value = {

@@ -7,6 +7,7 @@ import { Icon } from 'react-native-elements';
 // import Login from '../screens/Login';
 import Register from '../screens/Register'
 import CheckIn from '../screens/CheckIn';
+import CheckInDetail from '../screens/CheckInDetail';
 
 export const RegisterStack = StackNavigator({
     Register: {
@@ -30,6 +31,23 @@ export const CheckInStack = StackNavigator({
         screen: CheckIn,
         navigationOptions: {
             title: 'Check In',
+            ...Platform.select({
+                android: {
+                    headerStyle: {
+                        backgroundColor: '#293A8C',
+                    },
+                    headerTintColor: '#fff'
+                }
+            })
+        }
+    }
+})
+
+export const CheckInDetailStack = StackNavigator({
+    CheckInDetail: {
+        screen: CheckInDetail,
+        navigationOptions: {
+            title: 'Check In Details',
             ...Platform.select({
                 android: {
                     headerStyle: {

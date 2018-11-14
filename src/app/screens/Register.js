@@ -3,6 +3,7 @@ import { SafeAreaView } from 'react-navigation'
 import { Button, Alert } from 'react-native';
 import styles from '../Style'
 import t from 'tcomb-form-native';
+import axios from 'axios';
 
 const Form = t.form.Form;
 
@@ -50,7 +51,21 @@ class Register extends Component {
                 [
                     {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
                     {text: 'Confirm', onPress: () => {
-                        this.clearForm();
+                        axios.post('http://localhost:3333/api/v1/ticket/generate', {
+                            quantity: value.quantity,
+                            email: value.email.toString()
+                        })
+                        .then(function(response) {
+                            console.log(response);
+                            if (response.status == 200) {
+                                //response.data.message
+                                Alert.alert(response.data.message);
+                                this.clearForm();
+                            }
+                        })
+                        .catch(function(error) {
+                            Alert.alert(error);
+                        });
                         //send qty and email
                         //if successful, clear form
                     }},

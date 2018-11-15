@@ -4,6 +4,7 @@ import { Button, Alert } from 'react-native';
 import styles from '../Style'
 import t from 'tcomb-form-native';
 import axios from 'axios';
+import { onSignIn } from "../auth";
 
 const Form = t.form.Form;
 
@@ -42,10 +43,11 @@ class LoginPage extends Component {
                 if (response.status == 200) {
                     //response.data.message
                     //navigate
+                    onSignIn(response.data.data.token);
                 }
             })
             .catch(function(error) {
-                Alert.alert("Error", "Failed to log in");
+                Alert.alert("Error", error.toString());
             });
         }
     }

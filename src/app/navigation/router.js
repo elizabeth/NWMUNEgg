@@ -56,14 +56,14 @@ export const CheckInStack = StackNavigator({
     }
 })
 
-export const androidHeader = Platform.select({
-    android: {
-        headerStyle: {
-            backgroundColor: '#293A8C',
-        },
-        headerTintColor: '#fff'
-    }
-})
+// export const androidHeader = Platform.select({
+//     android: {
+//         headerStyle: {
+//             backgroundColor: '#293A8C',
+//         },
+//         headerTintColor: '#fff'
+//     }
+// })
 
 export const Tabs = Platform.select({
     ios: createBottomTabNavigator({

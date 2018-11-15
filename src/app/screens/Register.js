@@ -4,6 +4,7 @@ import { Button, Alert } from 'react-native';
 import styles from '../Style'
 import t from 'tcomb-form-native';
 import axios from 'axios';
+import { getToken } from "../auth";
 
 const Form = t.form.Form;
 
@@ -49,32 +50,43 @@ class Register extends Component {
         // console.log('value: ', value);
 
         if (value) {
-            Alert.alert(
-                'Confirm Purchase',
-                'Are you sure you wish to purchase ' + value.quantity + ' tickets?',
-                [
-                    {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-                    {text: 'Confirm', onPress: () => {
-                        axios.post('http://54.148.136.72/api/v1/ticket/generate', 
-                        {
-                            quantity: value.quantity,
-                            email: value.email.toString()
-                        })
-                        .then(function(response) {
-                            console.log(response);
-                            if (response.status == 200) {
-                                //response.data.message
-                                Alert.alert("Success", response.data.message);
-                                this.clearForm();
-                            }
-                        })
-                        .catch(function(error) {
-                            Alert.alert("Error", "Error scanning ticket, please try again");
-                        });
-                    }},
-                ],
-                { cancelable: false }
-            )
+            var token = getToken();
+
+            if (token) {
+                Alert.alert(
+                    'Confirm Purchase',
+                    'Are you sure you wish to purchase ' + value.quantity + ' tickets?',
+                    [
+                        {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+                        {text: 'Confirm', onPress: () => {
+                            axios.post('http://54.148.136.72/api/v1/ticket/generate', 
+                            {
+                                quantity: value.quantity,
+                                email: value.email.toString()
+                            },
+                            {
+                                headers: {'Authorization': "bearer " + token}
+                            })
+                            .then(function(response) {
+                                console.log(response);
+                                if (response.status == 200) {
+                                    //response.data.message
+                                    Alert.alert("Success", response.data.message);
+                                    this.clearForm();
+                                }
+                            })
+                            .catch(function(error) {
+                                Alert.alert("Error", "Error purchasing ticket, please try again");
+                            });
+                        }},
+                    ],
+                    { cancelable: false }
+                )   
+            } else {
+                Alert.alert("Error", "User is not logged in");
+            }
+        } else {
+            Alert.alert("Error", "Error purchasing ticket, please contact admins");
         }
     }
 

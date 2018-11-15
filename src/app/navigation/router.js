@@ -4,7 +4,6 @@ import { createBottomTabNavigator, StackNavigator } from 'react-navigation';
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
 import { Icon } from 'react-native-elements';
 
-// import Login from '../screens/Login';
 import Register from '../screens/Register'
 import CheckIn from '../screens/CheckIn';
 import CheckInDetail from '../screens/CheckInDetail';

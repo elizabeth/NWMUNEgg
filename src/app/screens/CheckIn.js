@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { withNavigationFocus } from 'react-navigation'
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { View } from 'react-native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 
 import styles from '../Style'

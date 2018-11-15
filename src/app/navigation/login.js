@@ -1,12 +1,11 @@
-import React from 'react';
 import { Platform } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 
-import Login from '../screens/Login';
+import LoginPage from '../screens/LoginPage';
 
-export const LoginStack = StackNavigator({
-    Login: {
-        screen: Login,
+export const Login = StackNavigator({
+    LoginPage: {
+        screen: LoginPage,
         navigationOptions: {
             title: 'Log In',
             ...Platform.select({

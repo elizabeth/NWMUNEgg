@@ -7,42 +7,45 @@ import axios from 'axios';
 
 const Form = t.form.Form;
 
-const User = t.struct({
-    username: t.String,
-    password: t.String,
+const Email = t.refinement(t.String, email => {
+    const reg = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/; //or any other regexp
+    return reg.test(email);
 });
 
-// var options = {
-//     fields: {
-//         email: {
-//             error: 'Insert a valid email'
-//         }
-//     }
-// }
+const User = t.struct({
+    username: Email,
+    password: t.String
+});
 
-class Login extends Component {
-    clearForm() {
-        this.setState({ value: null });
+var options = {
+    fields: {
+        username: {
+            label: "Username (email)"
+        },
+        password: {
+            password: true,
+            secureTextEntry: true
+        }
     }
+}
 
+class LoginPage extends Component {
     handleSubmit = () => {
         const value = this._form.getValue();
 
         if (value) {
-            axios.post('http://localhost:3333/api/v1/users/authenticate', {
-                email: value.email,
+            axios.post('http://54.148.136.72/api/v1/users/authenticate', {
+                email: value.username,
                 password: value.password
             })
             .then(function(response) {
-                console.log(response);
                 if (response.status == 200) {
                     //response.data.message
-                    Alert.alert(response.data.message);
-                    this.clearForm();
+                    //navigate
                 }
             })
             .catch(function(error) {
-                Alert.alert(error);
+                Alert.alert("Error", "Failed to log in");
             });
         }
     }
@@ -54,7 +57,7 @@ class Login extends Component {
                 <Form 
                     ref={c => this._form = c}
                     type={User} 
-                    value={value}
+                    options={options}
                 />
 
                 <Button
@@ -79,4 +82,4 @@ class Login extends Component {
 //     }
 // });
   
-export default Register;
+export default LoginPage;

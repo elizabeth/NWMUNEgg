@@ -4,10 +4,10 @@ import styles from '../Style'
 import axios from 'axios';
 
 var config = {
-    headers: {'Authorization': "bearer " + token}
+    headers: {'Authorization': "bearer " }
 };
 
-class CheckInDetail extends Component<Props> {
+class CheckInDetail extends Component {
     constructor(props) {
         super(props);
         this.params = this.props.navigation.state.params;

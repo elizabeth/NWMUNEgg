@@ -68,17 +68,19 @@ class Register extends Component {
                                         headers: {'Authorization': "bearer " + res}
                                     })
                                     .then((response) => {
-                                        console.log(response);
                                         if (response.status == 200) {
-                                            //response.data.message
                                             Alert.alert("Success", response.data.message);
                                             this.clearForm();
+                                        } else if (response.status == 403) {
+                                            Alert.alert("Error", "Error purchasing ticket, please check your internet.");
+                                        } else if (response.status = 500) {
+                                            Alert.alert("Error", "Internal error, please contact admin. " + error.toString());
                                         } else {
-                                            Alert.alert("Error", "Error purchasing ticket, please try again " + error.toString());
+                                            Alert.alert("Error", error.toString());
                                         }
                                     })
                                     .catch((error) => {
-                                        Alert.alert("Error", "Error purchasing ticket, please try again " + error.toString());
+                                        Alert.alert("Error", "Error purchasing ticket, please try again. " + error.toString());
                                     });
                                 } else {
                                     Alert.alert("Error", "User is not logged in");

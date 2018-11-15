@@ -8,7 +8,7 @@ import styles from '../Style'
 class CheckIn extends Component {
     onSuccess(e) {
         //e.data
-        this.props.navigation.navigate('CheckInDetail', {code: "codehere"});
+        this.props.navigation.navigate('CheckInDetail', {code: e.data});
     }
 
     renderCamera() {

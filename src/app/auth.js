@@ -20,10 +20,16 @@ export const isSignedIn = () => {
     });
 };
 
-export const getToken = async () => {
-    try {
-        return await AsyncStorage.getItem(BEARER_TOKEN)
-      } catch (error) {
-      }
-      return
+export const getToken = () => {
+    return new Promise((resolve, reject) => {
+        AsyncStorage.getItem(BEARER_TOKEN)
+        .then(res => {
+            if (res !== null) {
+                resolve(res);
+            } else {
+                reject(null);
+            }
+        })
+        .catch(err => reject(err));
+    });
 }

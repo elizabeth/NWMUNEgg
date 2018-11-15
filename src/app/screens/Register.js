@@ -50,41 +50,46 @@ class Register extends Component {
         // console.log('value: ', value);
 
         if (value) {
-            var token = getToken();
-
-            if (token) {
-                Alert.alert(
-                    'Confirm Purchase',
-                    'Are you sure you wish to purchase ' + value.quantity + ' tickets?',
-                    [
-                        {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-                        {text: 'Confirm', onPress: () => {
-                            axios.post('http://54.148.136.72/api/v1/ticket/generate', 
-                            {
-                                quantity: value.quantity,
-                                email: value.email.toString()
-                            },
-                            {
-                                headers: {'Authorization': "bearer " + token}
-                            })
-                            .then(function(response) {
-                                console.log(response);
-                                if (response.status == 200) {
-                                    //response.data.message
-                                    Alert.alert("Success", response.data.message);
-                                    this.clearForm();
+            getToken()
+                .then(res => {
+                    Alert.alert(
+                        'Confirm Purchase',
+                        'Are you sure you wish to purchase ' + value.quantity + ' tickets?',
+                        [
+                            {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+                            {text: 'Confirm', onPress: () => {
+                                if (res) {
+                                    axios.post('http://54.148.136.72/api/v1/ticket/generate', 
+                                    {
+                                        quantity: value.quantity,
+                                        email: value.email.toString()
+                                    },
+                                    {
+                                        headers: {'Authorization': "bearer " + res}
+                                    })
+                                    .then((response) => {
+                                        console.log(response);
+                                        if (response.status == 200) {
+                                            //response.data.message
+                                            Alert.alert("Success", response.data.message);
+                                            this.clearForm();
+                                        } else {
+                                            Alert.alert("Error", "Error purchasing ticket, please try again " + error.toString());
+                                        }
+                                    })
+                                    .catch((error) => {
+                                        Alert.alert("Error", "Error purchasing ticket, please try again " + error.toString());
+                                    });
+                                } else {
+                                    Alert.alert("Error", "User is not logged in");
                                 }
-                            })
-                            .catch(function(error) {
-                                Alert.alert("Error", "Error purchasing ticket, please try again");
-                            });
-                        }},
-                    ],
-                    { cancelable: false }
-                )   
-            } else {
-                Alert.alert("Error", "User is not logged in");
-            }
+                            }},
+                        ],
+                        { cancelable: false }
+                    )   
+                }).catch(err => {
+                    Alert.alert("Error", "User is not logged in");
+                });
         } else {
             Alert.alert("Error", "Error purchasing ticket, please contact admins");
         }

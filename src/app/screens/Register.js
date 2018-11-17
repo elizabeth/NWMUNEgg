@@ -15,7 +15,7 @@ const Email = t.refinement(t.String, email => {
 
 const VerifyEmailEquality = t.refinement(t.String, value => {
     return true
-    // return value === this.state.value.email
+    // return value.toLowerCase() === this.value.email.toLowerCase()
   })
 
 const Purchase = t.struct({
@@ -71,10 +71,6 @@ class Register extends Component {
                                         if (response.status == 200) {
                                             Alert.alert("Success", response.data.message);
                                             this.clearForm();
-                                        } else if (response.status == 403) {
-                                            Alert.alert("Error", "Error purchasing ticket, please check your internet.");
-                                        } else if (response.status = 500) {
-                                            Alert.alert("Error", "Internal error, please contact admin. " + error.toString());
                                         } else {
                                             Alert.alert("Error", error.toString());
                                         }

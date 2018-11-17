@@ -71,14 +71,14 @@ export const Tabs = Platform.select({
             screen: RegisterStack,
             navigationOptions: {
                 tabBarLabel: 'Register',
-                tabBarIcon: ({ tintColor }) => <Icon name="home" size={30} color={tintColor} />,
+                tabBarIcon: ({ tintColor }) => <Icon name="redeem" size={30} color={tintColor} />,
             }
         },
         CheckInStack: {
             screen: CheckInStack,
             navigationOptions: {
                 tabBarLabel: 'Check In',
-                tabBarIcon: ({ tintColor }) => <Icon name="date-range" size={30} color={tintColor} />
+                tabBarIcon: ({ tintColor }) => <Icon name="photo-camera" size={30} color={tintColor} />
             }
         }
     }, {
@@ -91,15 +91,15 @@ export const Tabs = Platform.select({
             screen: RegisterStack,
             navigationOptions: {
                 tabBarLabel: 'Register',
-                tabBarIcon: ({ tintColor }) => <Icon name="home" color={tintColor} />,
+                tabBarIcon: ({ tintColor }) => <Icon name="redeem" color={tintColor} />,
             }        
         },
         CheckIn: {
             screen: CheckInStack,
             navigationOptions: {
                 tabBarLabel: 'Check In',
-                tabBarIcon: ({ tintColor }) => <Icon name="date-range" color={tintColor} />
-            }        
+                tabBarIcon: ({ tintColor }) => <Icon name="photo-camera" color={tintColor} />
+            }
         }
     }, {
         shifting: true,

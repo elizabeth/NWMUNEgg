@@ -36,10 +36,6 @@ var value = {
 //     }
 // }
 
-var config = {
-    headers: {'Authorization': "bearer " }
-};
-
 class Register extends Component {
     clearForm() {
         this.setState({ value: null });

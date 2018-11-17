@@ -3,8 +3,6 @@ import { withNavigationFocus } from 'react-navigation'
 import { View } from 'react-native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 
-import styles from '../Style'
-
 class CheckIn extends Component {
     onSuccess(e) {
         //e.data

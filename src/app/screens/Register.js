@@ -3,6 +3,8 @@ import { SafeAreaView } from 'react-navigation'
 import { Button, Alert } from 'react-native';
 import styles from '../Style'
 import t from 'tcomb-form-native';
+import axios from 'axios';
+import { getToken } from "../auth";
 
 const Form = t.form.Form;
 
@@ -11,10 +13,15 @@ const Email = t.refinement(t.String, email => {
     return reg.test(email);
 });
 
+const VerifyEmailEquality = t.refinement(t.String, value => {
+    return true
+    // return value.toLowerCase() === this.value.email.toLowerCase()
+  })
+
 const Purchase = t.struct({
     quantity: t.Number,
     email: Email,
-    verifyEmail: Email,
+    verifyEmail: VerifyEmailEquality,
 });
 
 var value = {
@@ -29,6 +36,10 @@ var value = {
 //     }
 // }
 
+var config = {
+    headers: {'Authorization': "bearer " }
+};
+
 class Register extends Component {
     clearForm() {
         this.setState({ value: null });
@@ -39,19 +50,46 @@ class Register extends Component {
         // console.log('value: ', value);
 
         if (value) {
-            Alert.alert(
-                'Confirm Purchase',
-                'Are you sure you wish to purchase ' + value.quantity + ' tickets?',
-                [
-                    {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-                    {text: 'Confirm', onPress: () => {
-                        this.clearForm();
-                        //send qty and email
-                        //if successful, clear form
-                    }},
-                ],
-                { cancelable: false }
-            )
+            getToken()
+                .then(res => {
+                    Alert.alert(
+                        'Confirm Purchase',
+                        'Are you sure you wish to purchase ' + value.quantity + ' tickets?',
+                        [
+                            {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+                            {text: 'Confirm', onPress: () => {
+                                if (res) {
+                                    axios.post('http://54.148.136.72/api/v1/ticket/generate', 
+                                    {
+                                        quantity: value.quantity,
+                                        email: value.email.toString()
+                                    },
+                                    {
+                                        headers: {'Authorization': "bearer " + res}
+                                    })
+                                    .then((response) => {
+                                        if (response.status == 200) {
+                                            Alert.alert("Success", response.data.message);
+                                            this.clearForm();
+                                        } else {
+                                            Alert.alert("Error", error.toString());
+                                        }
+                                    })
+                                    .catch((error) => {
+                                        Alert.alert("Error", "Error purchasing ticket, please try again. " + error.toString());
+                                    });
+                                } else {
+                                    Alert.alert("Error", "User is not logged in");
+                                }
+                            }},
+                        ],
+                        { cancelable: false }
+                    )   
+                }).catch(err => {
+                    Alert.alert("Error", "User is not logged in");
+                });
+        } else {
+            Alert.alert("Error", "Error purchasing ticket, please contact admins");
         }
     }
 

@@ -4,9 +4,9 @@ import { createBottomTabNavigator, StackNavigator } from 'react-navigation';
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
 import { Icon } from 'react-native-elements';
 
-// import Login from '../screens/Login';
 import Register from '../screens/Register'
 import CheckIn from '../screens/CheckIn';
+import CheckInDetail from '../screens/CheckInDetail';
 
 export const RegisterStack = StackNavigator({
     Register: {
@@ -39,17 +39,31 @@ export const CheckInStack = StackNavigator({
                 }
             })
         }
+    },
+    CheckInDetail: {
+        screen: CheckInDetail,
+        navigationOptions: {
+            title: 'Check In Details',
+            ...Platform.select({
+                android: {
+                    headerStyle: {
+                        backgroundColor: '#293A8C',
+                    },
+                    headerTintColor: '#fff'
+                }
+            })
+        }
     }
 })
 
-export const androidHeader = Platform.select({
-    android: {
-        headerStyle: {
-            backgroundColor: '#293A8C',
-        },
-        headerTintColor: '#fff'
-    }
-})
+// export const androidHeader = Platform.select({
+//     android: {
+//         headerStyle: {
+//             backgroundColor: '#293A8C',
+//         },
+//         headerTintColor: '#fff'
+//     }
+// })
 
 export const Tabs = Platform.select({
     ios: createBottomTabNavigator({
@@ -57,14 +71,14 @@ export const Tabs = Platform.select({
             screen: RegisterStack,
             navigationOptions: {
                 tabBarLabel: 'Register',
-                tabBarIcon: ({ tintColor }) => <Icon name="home" size={30} color={tintColor} />,
+                tabBarIcon: ({ tintColor }) => <Icon name="redeem" size={30} color={tintColor} />,
             }
         },
         CheckInStack: {
             screen: CheckInStack,
             navigationOptions: {
                 tabBarLabel: 'Check In',
-                tabBarIcon: ({ tintColor }) => <Icon name="date-range" size={30} color={tintColor} />
+                tabBarIcon: ({ tintColor }) => <Icon name="photo-camera" size={30} color={tintColor} />
             }
         }
     }, {
@@ -77,15 +91,15 @@ export const Tabs = Platform.select({
             screen: RegisterStack,
             navigationOptions: {
                 tabBarLabel: 'Register',
-                tabBarIcon: ({ tintColor }) => <Icon name="home" color={tintColor} />,
+                tabBarIcon: ({ tintColor }) => <Icon name="redeem" color={tintColor} />,
             }        
         },
         CheckIn: {
             screen: CheckInStack,
             navigationOptions: {
                 tabBarLabel: 'Check In',
-                tabBarIcon: ({ tintColor }) => <Icon name="date-range" color={tintColor} />
-            }        
+                tabBarIcon: ({ tintColor }) => <Icon name="photo-camera" color={tintColor} />
+            }
         }
     }, {
         shifting: true,

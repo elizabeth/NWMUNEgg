@@ -72,7 +72,7 @@ class CheckInDetail extends Component {
                     <View style={styles.container}>
                         <Icon name="block" size={100} color="#ff0000" />
                         <Text style={[checkInStyles.center, checkInStyles.large]}>{this.state.message}</Text>
-                        <Text>Check in log:</Text>    
+                        <Text style={checkInStyles.log}>Check in log:</Text>    
                         {this.state.data.check_in_log && this.state.data.check_in_log.map((log, index) => {
                             return (<Text key={index}>{log}</Text>)
                         })}
@@ -93,6 +93,9 @@ const checkInStyles = StyleSheet.create({
     },
     large: {
         fontSize: 30
+    },
+    log: {
+        marginTop: 15
     }
   });
   

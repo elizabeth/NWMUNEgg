@@ -56,7 +56,7 @@ class CheckInDetail extends Component {
             if (this.state.valid) {
                 return (
                     <View style={styles.container}>
-                        <Icon name="check-circle" size={100} color="#00ff00" />
+                        <Icon name="check-circle" size={100} color="#00e500" />
                         <Text style={[checkInStyles.center, checkInStyles.large]}>{this.state.message}</Text>
                     </View>
                 )
@@ -73,7 +73,7 @@ class CheckInDetail extends Component {
                         <Icon name="block" size={100} color="#ff0000" />
                         <Text style={[checkInStyles.center, checkInStyles.large]}>{this.state.message}</Text>
                         <Text>Check in log:</Text>    
-                        {this.state.data.check_in_log.map((log, index) => {
+                        {this.state.data.check_in_log && this.state.data.check_in_log.map((log, index) => {
                             return (<Text key={index}>{log}</Text>)
                         })}
                     </View>

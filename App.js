@@ -1,49 +1,43 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
+import React, { Component } from 'react';
+import { Alert } from 'react-native';
+import { Login } from './src/app/navigation/login';
+import { Tabs } from './src/app/navigation/router';
+import { isSignedIn } from "./src/app/auth";
 
-import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
+export default class App extends Component {
+    constructor(props) {
+        super(props);
+    
+        this.state = {
+          signedIn: false,
+          checkedSignIn: false
+        };
+    }
+    
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
-  android:
-    'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
+    async componentDidMount() {
+        isSignedIn()
+            .then(res => this.setState({ signedIn: res, checkedSignIn: true }))
+            .catch(err => Alert.alert("Error", err.toString()));        // try {
+        //   const user = await Auth.currentAuthenticatedUser()
+        //   this.setState({ user, isLoading: false })
+        // } catch (err) {
+        //   this.setState({ isLoading: false })
+        // }
+      }
 
-type Props = {};
-export default class App extends Component<Props> {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Native!</Text>
-        <Text style={styles.instructions}>To get started, edit App.js</Text>
-        <Text style={styles.instructions}>{instructions}</Text>
-      </View>
-    );
-  }
+    render() {
+        const { checkedSignIn, signedIn } = this.state;
+
+        // If we haven't checked AsyncStorage yet, don't render anything (better ways to do this)
+        if (!checkedSignIn) {
+            return null;
+        }
+    
+        if (signedIn) {
+            return <Tabs />;
+        } else {
+            return <Login />;
+        }
+    }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});

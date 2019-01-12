@@ -1,12 +1,31 @@
 import React from 'react';
 import { Platform } from 'react-native';
-import { createBottomTabNavigator, StackNavigator } from 'react-navigation';
+import { createBottomTabNavigator, StackNavigator, createSwitchNavigator
+} from 'react-navigation';
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
 import { Icon } from 'react-native-elements';
 
+import LoginPage from '../screens/LoginPage';
 import Register from '../screens/Register'
 import CheckIn from '../screens/CheckIn';
 import CheckInDetail from '../screens/CheckInDetail';
+
+export const Login = StackNavigator({
+    LoginPage: {
+        screen: LoginPage,
+        navigationOptions: {
+            title: 'Log In',
+            ...Platform.select({
+                android: {
+                    headerStyle: {
+                        backgroundColor: '#293A8C',
+                    },
+                    headerTintColor: '#fff'
+                }
+            }) 
+        }
+    }
+})
 
 export const RegisterStack = StackNavigator({
     Register: {
@@ -107,3 +126,19 @@ export const Tabs = Platform.select({
         barStyle: { backgroundColor: '#293A8C' },
     })
 })
+
+export const createRootNavigator = (signedIn = false) => {
+    return createSwitchNavigator(
+        {
+            Tabs: {
+                screen: Tabs
+            },
+            Login: {
+                screen: Login
+            }
+        },
+        {
+            initialRouteName: signedIn ? "Tabs" : "Login"
+        }
+    );
+  };

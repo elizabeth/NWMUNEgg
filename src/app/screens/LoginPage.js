@@ -39,11 +39,11 @@ class LoginPage extends Component {
                 email: value.username,
                 password: value.password
             })
-            .then(function(response) {
+            .then((response) => {
                 if (response.status == 200) {
-                    //response.data.message
                     //navigate
                     onSignIn(response.data.data.token);
+                    this.props.navigation.navigate('Tabs');
                 }
             })
             .catch(function(error) {

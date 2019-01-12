@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Alert } from 'react-native';
-import { Login } from './src/app/navigation/login';
-import { Tabs } from './src/app/navigation/router';
+import { createRootNavigator } from './src/app/navigation/router';
+
 import { isSignedIn } from "./src/app/auth";
 
 export default class App extends Component {
@@ -34,10 +34,12 @@ export default class App extends Component {
             return null;
         }
     
-        if (signedIn) {
-            return <Tabs />;
-        } else {
-            return <Login />;
-        }
+        // if (signedIn) {
+        //     return <Tabs />;
+        // } else {
+        //     return <Login />;
+        // }
+        const Layout = createRootNavigator(signedIn);
+        return <Layout />;
     }
 }

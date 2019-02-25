@@ -18,6 +18,7 @@ class CheckIn extends Component {
             return (
                 <QRCodeScanner
                     onRead={this.onSuccess.bind(this)}
+                    cameraProps={{ captureAudio: false }}
                 />
             )
         }

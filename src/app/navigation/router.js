@@ -1,79 +1,77 @@
 import React from 'react';
-import { Platform } from 'react-native';
-import { createBottomTabNavigator, StackNavigator, createSwitchNavigator
+import { Platform, TouchableOpacity } from 'react-native';
+import { createBottomTabNavigator, createStackNavigator, createSwitchNavigator
 } from 'react-navigation';
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
 import { Icon } from 'react-native-elements';
+import StyleConstants from '../StyleConstants'
 
+import { onSignOut } from "../auth";
+import AuthLoading from '../screens/AuthLoading';
 import LoginPage from '../screens/LoginPage';
 import Register from '../screens/Register'
 import CheckIn from '../screens/CheckIn';
 import CheckInDetail from '../screens/CheckInDetail';
 
-export const Login = StackNavigator({
+const headerNavigationOptions = {
+    headerStyle: {
+        backgroundColor: '#293A8C',
+    },
+    headerTintColor: StyleConstants.headerTintColor
+}
+
+export const LoginStack = createStackNavigator({
     LoginPage: {
         screen: LoginPage,
         navigationOptions: {
-            title: 'Log In',
-            ...Platform.select({
-                android: {
-                    headerStyle: {
-                        backgroundColor: '#293A8C',
-                    },
-                    headerTintColor: '#fff'
-                }
-            }) 
+            title: 'Log In'
         }
+    }},
+    {
+        defaultNavigationOptions: headerNavigationOptions
     }
-})
+)
 
-export const RegisterStack = StackNavigator({
+export const RegisterStack = createStackNavigator({
     Register: {
         screen: Register,
         navigationOptions: {
             title: 'Register',
-            ...Platform.select({
-                android: {
-                    headerStyle: {
-                        backgroundColor: '#293A8C',
-                    },
-                    headerTintColor: '#fff'
-                }
-            }) 
+        }
+    }},
+    {   
+        defaultNavigationOptions: 
+            ({navigation}) => { return {
+                ...headerNavigationOptions,
+                headerRight:
+                    <TouchableOpacity onPress={() => {
+                        onSignOut();
+                        navigation.navigate({routeName: 'Login'})
+                    }} style={ [{paddingHorizontal:15}] }>
+                        <Icon name="exit-to-app" color={ StyleConstants.headerTintColor } />
+                    </TouchableOpacity>
+            }
         }
     }
-})
+)
 
-export const CheckInStack = StackNavigator({
+export const CheckInStack = createStackNavigator({
     CheckIn: {
         screen: CheckIn,
         navigationOptions: {
-            title: 'Check In',
-            ...Platform.select({
-                android: {
-                    headerStyle: {
-                        backgroundColor: '#293A8C',
-                    },
-                    headerTintColor: '#fff'
-                }
-            })
+            title: 'Check In'
         }
     },
     CheckInDetail: {
         screen: CheckInDetail,
         navigationOptions: {
-            title: 'Check In Details',
-            ...Platform.select({
-                android: {
-                    headerStyle: {
-                        backgroundColor: '#293A8C',
-                    },
-                    headerTintColor: '#fff'
-                }
-            })
+            title: 'Check In Details'
         }
+    }},
+    {
+        defaultNavigationOptions: headerNavigationOptions
     }
-})
+)
 
 // export const androidHeader = Platform.select({
 //     android: {
@@ -84,25 +82,28 @@ export const CheckInStack = StackNavigator({
 //     }
 // })
 
-export const Tabs = Platform.select({
+export const TabsNavigator = Platform.select({
     ios: createBottomTabNavigator({
         Register: {
             screen: RegisterStack,
             navigationOptions: {
                 tabBarLabel: 'Register',
-                tabBarIcon: ({ tintColor }) => <Icon name="redeem" size={30} color={tintColor} />,
+                tabBarIcon: ({ tintColor }) => <Icon name="redeem" color={tintColor} />,
             }
         },
         CheckInStack: {
             screen: CheckInStack,
             navigationOptions: {
                 tabBarLabel: 'Check In',
-                tabBarIcon: ({ tintColor }) => <Icon name="photo-camera" size={30} color={tintColor} />
+                tabBarIcon: ({ tintColor }) => <Icon name="photo-camera" color={tintColor} />
             }
         }
     }, {
         tabBarOptions: {
-            activeTintColor: '#293A8C'
+            activeTintColor: '#fff',
+            style: {
+                backgroundColor: '#293A8C',
+            }
         }
     }),
     android: createMaterialBottomTabNavigator({
@@ -123,22 +124,17 @@ export const Tabs = Platform.select({
     }, {
         shifting: true,
         initialRouteName: 'Register',
-        barStyle: { backgroundColor: '#293A8C' },
+        barStyle: { backgroundColor: '#293A8C' }
     })
 })
 
-export const createRootNavigator = (signedIn = false) => {
-    return createSwitchNavigator(
-        {
-            Tabs: {
-                screen: Tabs
-            },
-            Login: {
-                screen: Login
-            }
-        },
-        {
-            initialRouteName: signedIn ? "Tabs" : "Login"
-        }
-    );
-  };
+export const AppNavigator = createSwitchNavigator(
+    {
+        AuthLoading: AuthLoading,
+        Tabs: TabsNavigator,
+        Login: LoginStack
+    },
+    {
+        initialRouteName: "AuthLoading"
+    }
+);

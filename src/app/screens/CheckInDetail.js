@@ -44,12 +44,6 @@ class CheckInDetail extends Component {
             }
         );
     }
-    
-    renderItem({item}){
-        return(
-            <Text>aaaa{item}</Text>
-        );
-      }
 
     render() {
         if (this.state.doneProcessing) {

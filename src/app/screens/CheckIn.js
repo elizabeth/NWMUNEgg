@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { withNavigationFocus } from 'react-navigation'
-import { View } from 'react-native';
+import { View, Button, Linking } from 'react-native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 
 class CheckIn extends Component {
@@ -18,8 +18,14 @@ class CheckIn extends Component {
             return (
                 <QRCodeScanner
                     onRead={this.onSuccess.bind(this)}
-                    cameraProps={{ captureAudio: false }}
-                />
+                    notAuthorizedView={
+                        <View><Button 
+                            title="Enable Camera Access"
+                            onPress={() => Linking.openURL('app-settings://')}></Button>
+                        </View>
+                    }
+                    cameraProps={{captureAudio: false}}
+                    />
             )
         }
     }

@@ -5,7 +5,6 @@ import { createBottomTabNavigator, createStackNavigator, createSwitchNavigator
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
 import { Icon } from 'react-native-elements';
 import StyleConstants from '../StyleConstants'
-
 import { onSignOut } from "../auth";
 import AuthLoading from '../screens/AuthLoading';
 import LoginPage from '../screens/LoginPage';
@@ -15,7 +14,7 @@ import CheckInDetail from '../screens/CheckInDetail';
 
 const headerNavigationOptions = {
     headerStyle: {
-        backgroundColor: '#293A8C',
+        backgroundColor: StyleConstants.primary,
     },
     headerTintColor: StyleConstants.headerTintColor
 }
@@ -100,9 +99,9 @@ export const TabsNavigator = Platform.select({
         }
     }, {
         tabBarOptions: {
-            activeTintColor: '#fff',
+            activeTintColor: StyleConstants.headerTintColor,
             style: {
-                backgroundColor: '#293A8C',
+                backgroundColor: StyleConstants.primary,
             }
         }
     }),
@@ -124,7 +123,7 @@ export const TabsNavigator = Platform.select({
     }, {
         shifting: true,
         initialRouteName: 'Register',
-        barStyle: { backgroundColor: '#293A8C' }
+        barStyle: { backgroundColor: StyleConstants.primary }
     })
 })
 

@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { SafeAreaView } from 'react-navigation'
-import { Button, Alert } from 'react-native';
+import { Alert, StatusBar } from 'react-native';
+import { ThemeProvider, Button } from 'react-native-elements'
 import styles from '../Style'
+import Theme from '../Theme'
 import t from 'tcomb-form-native';
 import axios from 'axios';
 import { onSignIn } from "../auth";
@@ -55,17 +57,23 @@ class LoginPage extends Component {
     render() {
         return (
             <SafeAreaView style={styles.container}>
- 
+                <StatusBar
+                    backgroundColor={StyleConstants.primaryDark}
+                    barStyle="light-content"
+                />
+
                 <Form 
                     ref={c => this._form = c}
                     type={User} 
                     options={options}
                 />
 
-                <Button
-                    title="Log in"
-                    onPress={this.handleSubmit}
-                />
+                <ThemeProvider theme={Theme}>
+                    <Button
+                        title="Log in"
+                        onPress={this.handleSubmit}
+                    />
+                </ThemeProvider>
             </SafeAreaView>
         );
     }

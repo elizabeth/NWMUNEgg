@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { SafeAreaView } from 'react-navigation'
-import { Button, Alert } from 'react-native';
+import { Alert, StatusBar } from 'react-native';
+import { ThemeProvider, Button } from 'react-native-elements'
 import styles from '../Style'
+import Theme from '../Theme'
 import t from 'tcomb-form-native';
 import axios from 'axios';
 import { getToken } from "../auth";
@@ -92,33 +94,26 @@ class Register extends Component {
     render() {
         return (
             <SafeAreaView style={styles.container}>
- 
+                <StatusBar
+                    backgroundColor={StyleConstants.primaryDark}
+                    barStyle="light-content"
+                />
+
                 <Form 
                     ref={c => this._form = c}
                     type={Purchase} 
                     value={value}
                 />
 
-                <Button
-                    title="Purchase Ticket"
-                    onPress={this.handleSubmit}
-                />
+                <ThemeProvider theme={Theme}>
+                    <Button
+                        title="Purchase Ticket"
+                        onPress={this.handleSubmit}
+                    />
+                </ThemeProvider>
             </SafeAreaView>
         );
     }
 }
-  
-// const registerStyles = StyleSheet.create({
-//     container: {
-//         flex: 1,
-//         justifyContent: 'center',
-//         alignItems: 'center',
-//     },
-//     welcome: {
-//         fontSize: 20,
-//         textAlign: 'center',
-//         margin: 10,
-//     }
-// });
   
 export default Register;

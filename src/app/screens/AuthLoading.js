@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { View, Alert, ActivityIndicator } from 'react-native';
-
+import { View, StatusBar, Alert, ActivityIndicator } from 'react-native';
 import { isSignedIn } from "../auth";
+import StyleConstants from '../StyleConstants'
 
 export default class AuthLoading extends Component {
     constructor(props) {
@@ -41,7 +41,11 @@ export default class AuthLoading extends Component {
     render() {
         return (
             <View>
-                <ActivityIndicator />
+                <StatusBar
+                    barStyle="light-content"
+                    backgroundColor={StyleConstants.primaryDark}
+                />
+                <ActivityIndicator/>
             </View>
         );
     }

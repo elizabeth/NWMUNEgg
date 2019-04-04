@@ -23,7 +23,7 @@ export const LoginStack = createStackNavigator({
     LoginPage: {
         screen: LoginPage,
         navigationOptions: {
-            title: 'Log In'
+            title: 'NWMUN Social Ticketing'
         }
     }},
     {
@@ -87,7 +87,7 @@ export const TabsNavigator = Platform.select({
             screen: RegisterStack,
             navigationOptions: {
                 tabBarLabel: 'Register',
-                tabBarIcon: ({ tintColor }) => <Icon name="redeem" color={tintColor} />,
+                tabBarIcon: ({ tintColor }) => <Icon type="material-community" name="ticket" color={tintColor} />,
             }
         },
         CheckInStack: {
@@ -110,7 +110,7 @@ export const TabsNavigator = Platform.select({
             screen: RegisterStack,
             navigationOptions: {
                 tabBarLabel: 'Register',
-                tabBarIcon: ({ tintColor }) => <Icon name="redeem" color={tintColor} />,
+                tabBarIcon: ({ tintColor }) => <Icon type="material-community" name="ticket" color={tintColor} />,
             }        
         },
         CheckIn: {

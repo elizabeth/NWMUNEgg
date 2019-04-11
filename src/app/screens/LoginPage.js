@@ -1,45 +1,39 @@
 import React, { Component } from 'react';
 import { SafeAreaView } from 'react-navigation'
-import { Alert, StatusBar } from 'react-native';
-import { ThemeProvider, Button } from 'react-native-elements'
+import { Alert, StatusBar, View} from 'react-native';
+import { ThemeProvider, Input, Button } from 'react-native-elements'
 import styles from '../Style'
 import Theme from '../Theme'
-import t from 'tcomb-form-native';
 import axios from 'axios';
 import { onSignIn } from "../auth";
 
-const Form = t.form.Form;
-
-const Email = t.refinement(t.String, email => {
-    const reg = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/; //or any other regexp
-    return reg.test(email);
-});
-
-const User = t.struct({
-    username: Email,
-    password: t.String
-});
-
-var options = {
-    fields: {
-        username: {
-            label: "Username (email)"
-        },
-        password: {
-            password: true,
-            secureTextEntry: true
+const emailReg = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+class LoginPage extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            emailInputValid: false
         }
     }
-}
 
-class LoginPage extends Component {
+    validateEmail = (text) => {
+        this.setState({ email: text }, () => {
+            if (!emailReg.test(this.state.email)) {
+                this.setState({emailInputValid: false});
+            } else {
+                this.setState({emailInputValid: true});
+            }
+        });
+    }
+
     handleSubmit = () => {
-        const value = this._form.getValue();
+        const email =  this.state.email;
+        const password = this.state.password;
 
-        if (value) {
+        if (email && password) {
             axios.post('http://54.148.136.72/api/v1/users/authenticate', {
-                email: value.username,
-                password: value.password
+                email: email,
+                password: password
             })
             .then((response) => {
                 if (response.status == 200) {
@@ -49,8 +43,10 @@ class LoginPage extends Component {
                 }
             })
             .catch(function(error) {
-                Alert.alert("Error", error.toString());
+                Alert.alert("Unable to log in", error.toString());
             });
+        } else {
+            Alert.alert("Please enter a username and password")
         }
     }
 
@@ -62,34 +58,36 @@ class LoginPage extends Component {
                     barStyle="light-content"
                 />
 
-                <Form 
-                    ref={c => this._form = c}
-                    type={User} 
-                    options={options}
-                />
+                <View style={ styles.innerContainer }>
+                    <ThemeProvider theme={Theme}>
+                        <Input
+                            placeholder='Email'
+                            autoCapitalize ='none'
+                            keyboardType='email-address'
+                            textContentType='emailAddress'
+                            leftIcon={{ name: 'mail-outline' }}
+                            onChangeText={(text) => this.validateEmail(text)} 
+                        />
 
-                <ThemeProvider theme={Theme}>
-                    <Button
-                        title="Log in"
-                        onPress={this.handleSubmit}
-                    />
-                </ThemeProvider>
+                        <Input 
+                            placeholder='Password'
+                            textContentType='password'
+                            containerStyle={{ marginTop: 8 }}
+                            leftIcon={{ name: 'lock-outline' }}
+                            onChangeText={(text) => this.setState({ password: text })}
+                            secureTextEntry={ true }/>
+
+                        <Button
+                            title="Log in"
+                            onPress={ this.handleSubmit }
+                            containerStyle={{ width: '100%' }}
+                            disabled={ !this.state.emailInputValid || !this.state.password }
+                        />
+                    </ThemeProvider>
+                </View>
             </SafeAreaView>
         );
     }
 }
-  
-// const registerStyles = StyleSheet.create({
-//     container: {
-//         flex: 1,
-//         justifyContent: 'center',
-//         alignItems: 'center',
-//     },
-//     welcome: {
-//         fontSize: 20,
-//         textAlign: 'center',
-//         margin: 10,
-//     }
-// });
   
 export default LoginPage;

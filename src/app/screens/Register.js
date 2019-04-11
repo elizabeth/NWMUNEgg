@@ -1,66 +1,92 @@
 import React, { Component } from 'react';
 import { SafeAreaView } from 'react-navigation'
 import { Alert, StatusBar } from 'react-native';
-import { ThemeProvider, Button } from 'react-native-elements'
+import { ThemeProvider, Input, Button } from 'react-native-elements'
 import styles from '../Style'
 import Theme from '../Theme'
-import t from 'tcomb-form-native';
 import axios from 'axios';
 import { getToken } from "../auth";
 
-const Form = t.form.Form;
+const emailReg = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+// const Email = t.refinement(t.String, email => {
+//     const reg = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/; //or any other regexp
+//     return reg.test(email);
+// });
 
-const Email = t.refinement(t.String, email => {
-    const reg = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/; //or any other regexp
-    return reg.test(email);
-});
+// const VerifyEmailEquality = t.refinement(t.String, value => {
+//     // return true
+//     return value.toLowerCase() == this.value.email.toLowerCase()
+// })
 
-const VerifyEmailEquality = t.refinement(t.String, value => {
-    return true
-    // return value.toLowerCase() === this.value.email.toLowerCase()
-  })
+// const Purchase = t.struct({
+//     quantity: t.Number,
+//     email: Email,
+//     verifyEmail: VerifyEmailEquality,
+// });
 
-const Purchase = t.struct({
-    quantity: t.Number,
-    email: Email,
-    verifyEmail: VerifyEmailEquality,
-});
-
-var value = {
-    quantity: 1
-};
-
-// var options = {
-//     fields: {
-//         email: {
-//             error: 'Insert a valid email'
-//         }
-//     }
-// }
+// var value = {
+//     quantity: 1
+// };
 
 class Register extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            quantity: '1',
+            emailInputValid: false,
+            verifyEmailInputValid: false
+        }
+    }
+
+    validateEmail = (text) => {
+        this.setState({ email: text }, () => {
+            if (!emailReg.test(this.state.email)) {
+                this.setState({emailInputValid: false});
+            } else {
+                this.setState({emailInputValid: true});
+            }
+
+            if (this.state.email === this.state.verifyEmail) {
+                this.setState({verifyEmailInputValid: true});
+            } else {
+                this.setState({verifyEmailInputValid: false});
+            }
+        });
+    }
+
+    validateVerifyEmail = (text) => {
+        this.setState({ verifyEmail: text }, () => {
+            if (this.state.email === this.state.verifyEmail) {
+                this.setState({verifyEmailInputValid: true});
+            } else {
+                this.setState({verifyEmailInputValid: false});
+            }
+        })
+    }
+
     clearForm() {
-        this.setState({ value: null });
+        this.setState({ quantity: '1', emailInputValid: false, verifyEmailInputValid: false, email: '', verifyEmail: '' });
+        this.refs.emailInput.focus();
     }
 
     handleSubmit = () => {
-        const value = this._form.getValue(); // use that ref to get the form value
-        // console.log('value: ', value);
+        const quantity = this.state.quantity;
+        const email = this.state.email;
 
-        if (value) {
+        if (quantity && email) {
             getToken()
                 .then(res => {
                     Alert.alert(
                         'Confirm Purchase',
-                        'Are you sure you wish to purchase ' + value.quantity + ' tickets?',
+                        'Are you sure you wish to purchase ' + quantity + ' tickets?',
                         [
                             {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
                             {text: 'Confirm', onPress: () => {
                                 if (res) {
                                     axios.post('http://54.148.136.72/api/v1/ticket/generate', 
                                     {
-                                        quantity: value.quantity,
-                                        email: value.email.toString()
+                                        quantity: parseInt(quantity),
+                                        email: email
                                     },
                                     {
                                         headers: {'Authorization': "bearer " + res}
@@ -87,7 +113,7 @@ class Register extends Component {
                     Alert.alert("Error", "User is not logged in");
                 });
         } else {
-            Alert.alert("Error", "Error purchasing ticket, please contact admins");
+            Alert.alert("Please fill out the form");
         }
     }
 
@@ -99,16 +125,41 @@ class Register extends Component {
                     barStyle="light-content"
                 />
 
-                <Form 
-                    ref={c => this._form = c}
-                    type={Purchase} 
-                    value={value}
-                />
-
                 <ThemeProvider theme={Theme}>
+                    <Input
+                        label="Quantity"
+                        keyboardType="numeric"
+                        leftIcon={{ name: 'redeem' }}
+                        onChangeText={(text) => this.setState({quantity: text.replace(/[^0-9]/g, '')})}
+                        value={this.state.quantity}
+                    />
+
+                    <Input
+                        ref='emailInput'
+                        label='Email'
+                        autoCapitalize ='none'
+                        keyboardType='email-address'
+                        textContentType='emailAddress'
+                        autoFocus={true}
+                        leftIcon={{ name: 'mail-outline' }}
+                        onChangeText={(text) => this.validateEmail(text)} 
+                        value={this.state.email}
+                    />
+
+                    <Input
+                        label='Verify email'
+                        autoCapitalize ='none'
+                        keyboardType='email-address'
+                        textContentType='emailAddress'
+                        leftIcon={{ name: 'mail-outline' }}
+                        onChangeText={(text) => this.validateVerifyEmail(text)} 
+                        value={this.state.verifyEmail}
+                    />
+                    
                     <Button
-                        title="Purchase Ticket"
+                        title="Purchase"
                         onPress={this.handleSubmit}
+                        disabled={ !this.state.quantity || !this.state.emailInputValid || !this.state.verifyEmailInputValid }
                     />
                 </ThemeProvider>
             </SafeAreaView>

@@ -1,9 +1,10 @@
 import { Platform } from 'react-native';
-import { StackNavigator } from 'react-navigation';
+import { createAppContainer } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
 
 import LoginPage from '../screens/LoginPage';
 
-export const Login = StackNavigator({
+export const Login = createAppContainer(createStackNavigator({
     LoginPage: {
         screen: LoginPage,
         navigationOptions: {
@@ -18,4 +19,4 @@ export const Login = StackNavigator({
             }) 
         }
     }
-})
+}));

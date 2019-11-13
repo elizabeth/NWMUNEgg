@@ -1,6 +1,8 @@
 import React from 'react';
 import { Platform } from 'react-native';
-import { createBottomTabNavigator, StackNavigator } from 'react-navigation';
+import { createAppContainer } from 'react-navigation';
+import { createBottomTabNavigator } from 'react-navigation-tabs';
+import { createStackNavigator } from 'react-navigation-stack';
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
 import { Icon } from 'react-native-elements';
 
@@ -8,7 +10,7 @@ import Register from '../screens/Register'
 import CheckIn from '../screens/CheckIn';
 import CheckInDetail from '../screens/CheckInDetail';
 
-export const RegisterStack = StackNavigator({
+export const RegisterStack = createStackNavigator({
     Register: {
         screen: Register,
         navigationOptions: {
@@ -20,12 +22,12 @@ export const RegisterStack = StackNavigator({
                     },
                     headerTintColor: '#fff'
                 }
-            }) 
+            })
         }
     }
 })
 
-export const CheckInStack = StackNavigator({
+export const CheckInStack = createStackNavigator({
     CheckIn: {
         screen: CheckIn,
         navigationOptions: {
@@ -65,7 +67,7 @@ export const CheckInStack = StackNavigator({
 //     }
 // })
 
-export const Tabs = Platform.select({
+export const Tabs = createAppContainer(Platform.select({
     ios: createBottomTabNavigator({
         Register: {
             screen: RegisterStack,
@@ -91,7 +93,7 @@ export const Tabs = Platform.select({
             screen: RegisterStack,
             navigationOptions: {
                 tabBarLabel: 'Register',
-                tabBarIcon: ({ tintColor }) => <Icon name="redeem" color={tintColor} />,
+                tabBarIcon: ({ tintColor }) => <Icon name="redeem" color={tintColor} />
             }        
         },
         CheckIn: {
@@ -106,4 +108,4 @@ export const Tabs = Platform.select({
         initialRouteName: 'Register',
         barStyle: { backgroundColor: '#293A8C' },
     })
-})
+}));

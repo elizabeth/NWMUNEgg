@@ -33,6 +33,7 @@ var options = {
 class LoginPage extends Component {
     handleSubmit = () => {
         const value = this._form.getValue();
+        var handler = this.props.handler;
 
         if (value) {
             axios.post('http://54.148.136.72/api/v1/users/authenticate', {
@@ -43,7 +44,8 @@ class LoginPage extends Component {
                 if (response.status == 200) {
                     //response.data.message
                     //navigate
-                    onSignIn(response.data.data.token);
+                    // onSignIn(response.data.data.token);
+                    handler();
                 }
             })
             .catch(function(error) {

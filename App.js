@@ -14,7 +14,6 @@ export default class App extends Component {
         };
     }
     
-
     async componentDidMount() {
         isSignedIn()
             .then(res => this.setState({ signedIn: res, checkedSignIn: true }))
@@ -24,7 +23,7 @@ export default class App extends Component {
         // } catch (err) {
         //   this.setState({ isLoading: false })
         // }
-      }
+    }
 
     render() {
         const { checkedSignIn, signedIn } = this.state;

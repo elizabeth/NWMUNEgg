@@ -31,21 +31,28 @@ var options = {
 }
 
 class LoginPage extends Component {
+    // constructor(props) {
+    //     super(props);
+    // }
+
+    handleLogin = () => {
+        this.props.screenProps.handler();
+    }
+    
     handleSubmit = () => {
         const value = this._form.getValue();
-        var handler = this.props.handler;
-
+        
         if (value) {
             axios.post('http://54.148.136.72/api/v1/users/authenticate', {
                 email: value.username,
                 password: value.password
             })
-            .then(function(response) {
-                if (response.status == 200) {
-                    //response.data.message
-                    //navigate
-                    // onSignIn(response.data.data.token);
-                    handler();
+            .then((response) => {
+                if (response.status == 200 || response.status == 201) {
+                    onSignIn(response.data.data.token);
+                    this.handleLogin();
+                } else {
+                    Alert.alert("Error logging in.");
                 }
             })
             .catch(function(error) {

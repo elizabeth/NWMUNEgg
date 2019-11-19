@@ -9,20 +9,19 @@ export default class App extends Component {
         super(props);
     
         this.state = {
-          signedIn: false,
-          checkedSignIn: false
+            signedIn: false,
+            checkedSignIn: false
         };
+    }
+
+    handleSignIn = () => {
+        this.setState({ signedIn: true });
     }
     
     async componentDidMount() {
         isSignedIn()
             .then(res => this.setState({ signedIn: res, checkedSignIn: true }))
             .catch(err => Alert.alert("Error", err.toString()));        // try {
-        //   const user = await Auth.currentAuthenticatedUser()
-        //   this.setState({ user, isLoading: false })
-        // } catch (err) {
-        //   this.setState({ isLoading: false })
-        // }
     }
 
     render() {
@@ -34,9 +33,9 @@ export default class App extends Component {
         }
     
         if (signedIn) {
-            return <Tabs />;
+            return <Tabs  />;
         } else {
-            return <Login />;
+            return <Login screenProps={{handler: this.handleSignIn}}/>;
         }
     }
 }

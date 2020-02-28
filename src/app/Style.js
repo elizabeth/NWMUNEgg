@@ -6,9 +6,14 @@ export default StyleSheet.create({
         padding: 8,
         backgroundColor: "#FFF"
     },
+    rowContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
     innerContainer: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
-    },
+        alignItems: 'center'
+    }
 });

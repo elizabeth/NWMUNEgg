@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { SafeAreaView } from 'react-navigation'
-import { Button, Alert } from 'react-native';
+import { Button, Alert, ScrollView } from 'react-native';
 import styles from '../Style'
 import t from 'tcomb-form-native';
 import axios from 'axios';
 import { getToken } from "../auth";
+import { Icon } from 'react-native-elements';
 
 const Form = t.form.Form;
 
@@ -19,13 +20,15 @@ const VerifyEmailEquality = t.refinement(t.String, value => {
   })
 
 const Purchase = t.struct({
-    quantity: t.Number,
+    admission: t.Number,
+    kegTickets: t.Number,
     email: Email,
     verifyEmail: VerifyEmailEquality,
 });
 
 var value = {
-    quantity: 1
+    admission: 1,
+    kegTickets: 0
 };
 
 // var options = {
@@ -50,14 +53,15 @@ class Register extends Component {
                 .then(res => {
                     Alert.alert(
                         'Confirm Purchase',
-                        'Are you sure you wish to purchase ' + value.quantity + ' tickets?',
+                        `Are you sure you wish to purchase ${value.admission} admission tickets and ${value.kegTickets} keg tickets?`,
                         [
                             {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
                             {text: 'Confirm', onPress: () => {
                                 if (res) {
-                                    axios.post('http://54.148.136.72/api/v1/ticket/generate', 
+                                    axios.post('http://44.228.41.135/api/v1/ticket/generate', 
                                     {
-                                        quantity: value.quantity,
+                                        ticket_quantity: value.admission,
+                                        keg_quantity: value.kegTickets,
                                         email: value.email.toString()
                                     },
                                     {
@@ -92,17 +96,20 @@ class Register extends Component {
     render() {
         return (
             <SafeAreaView style={styles.container}>
- 
-                <Form 
-                    ref={c => this._form = c}
-                    type={Purchase} 
-                    value={value}
-                />
+                <ScrollView>
+                    
+                        
+                    <Form 
+                        ref={c => this._form = c}
+                        type={Purchase} 
+                        value={value}
+                    />
 
-                <Button
-                    title="Purchase Ticket"
-                    onPress={this.handleSubmit}
-                />
+                    <Button
+                        title="Purchase Ticket"
+                        onPress={this.handleSubmit}
+                    />
+                </ScrollView>
             </SafeAreaView>
         );
     }

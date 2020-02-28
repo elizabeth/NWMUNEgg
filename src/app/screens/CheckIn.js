@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 
 class CheckIn extends Component {
-    onSuccess(e) {
+    onSuccess = (e) => {
         //e.data
         this.props.navigation.navigate('CheckInDetail', {code: e.data});
     }
@@ -17,7 +17,7 @@ class CheckIn extends Component {
         } else if (isFocused) {
             return (
                 <QRCodeScanner
-                    onRead={this.onSuccess.bind(this)}
+                    onRead={this.onSuccess}
                 />
             )
         }

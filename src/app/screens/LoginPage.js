@@ -43,7 +43,7 @@ class LoginPage extends Component {
         const value = this._form.getValue();
         
         if (value) {
-            axios.post('http://54.148.136.72/api/v1/users/authenticate', {
+            axios.post('http://44.228.41.135/api/v1/users/authenticate', {
                 email: value.username,
                 password: value.password
             })
